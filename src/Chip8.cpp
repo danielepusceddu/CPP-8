@@ -243,6 +243,104 @@ void Chip8::step()
             V[0xF] = drawSprite(V[x], V[y], I, low & 0x0F);
         break;
 
+
+        //opcodes starting with E
+        case 0xE0:
+            switch(low){
+
+                //EX9E - SKP Vx
+                //Skip next instruction if key Vx is pressed
+                case 0x9E:
+                    if(keys[V[x]]){
+                        nextAddr = PC + 4;
+                    }
+                break;
+
+                //EXA1 - SKNP Vx
+                //Skip next instruction if key Vx is not pressed
+                case 0xA1:
+                    if(keys[V[x]] == false){
+                        nextAddr = PC + 4;
+                    }
+                break;
+
+                default:
+                    reportCode(high, low);
+                break;
+            }
+        break; //end opcodes starting with E
+
+        //opcodes starting with F
+        case 0xF0:
+            switch(low){
+
+                //FX07 - LD Vx, DT
+                //Set Vx = delay timer
+                case 0x07:
+                    V[x] = delayTimer;
+                break;
+
+                //FX0A - LD Vx, K
+                //Wait for keypress, store keypress in Vx
+                case 0x0A:
+                    //TODO
+                break;
+
+                //FX15 - LD DT, Vx
+                //Set delay timer to Vx
+                case 0x15:
+                    delayTimer = V[x];
+                break;
+
+                //FX18 - LD ST, Vx
+                //Set sound timer to Vx
+                case 0x18:
+                    soundtimer = V[x];
+                break;
+
+                //FX1E - ADD I, Vx
+                //Set I = I + Vx
+                case 0x1E:
+                    I += V[x];
+                break;
+
+                //FX29 - LD F, Vx
+                //Set I = location of sprite for digit Vx
+                case 0x29:
+                    //Each sprite is 5 bytes long.
+                    //They are stored in crescent order,
+                    //starting at addr 0.
+                    I = V[x] * 5;
+                break;
+
+                //FX33 - LD B, Vx
+                //Store BCD representation in memory locations I, I+1 and I+2
+                //Hundreds digit at I, tens at I+1, ones at I+2
+                case 0x33:
+                    mem[I] = V[x] / 100;
+                    mem[I+1] = (V[x] / 10) % 10;
+                    mem[I+2] = V[x] % 10;
+                break;
+
+                //FX55 - LD [I], Vx
+                //Store registers V0 through Vx,
+                //starting at location I.
+                case 0x55:
+                    for(int i = 0; i <= low; i++)
+                        mem[I+i] = V[i];
+                break;
+
+                //FX65 - LD Vx, [I]
+                //Read registers V0 through Vx from memory,
+                //starting at location I
+                case 0x65:
+                    for(int i = 0; i <= low; i++)
+                        V[i] = mem[I+i];
+                break;
+            }
+        break;
+        
+
     } //End first nibble switch
 
     //Go to next address
