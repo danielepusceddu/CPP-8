@@ -293,6 +293,9 @@ void Chip8::step()
                         k.reset();
                         nextAddr = PC + 2;
                     }
+                    else{
+                        nextAddr = PC;
+                    }
                 break;
 
                 //FX15 - LD DT, Vx
