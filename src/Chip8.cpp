@@ -371,7 +371,7 @@ void Chip8::step()
                 //Store registers V0 through Vx,
                 //starting at location I.
                 case 0x55:
-                    for(int i = 0; i <= low; i++)
+                    for(int i = 0; i <= x; i++)
                         mem[I+i] = V[i];
                 break;
 
@@ -379,7 +379,7 @@ void Chip8::step()
                 //Read registers V0 through Vx from memory,
                 //starting at location I
                 case 0x65:
-                    for(int i = 0; i <= low; i++)
+                    for(int i = 0; i <= x; i++)
                         V[i] = mem[I+i];
                 break;
             }
