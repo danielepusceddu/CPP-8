@@ -8,10 +8,14 @@
 
 class Chip8{
     public:
+        class FileNotFound : public std::exception{};
+        class FileTooBig : public std::exception{};
+
         //This method attempts copying the contents of
         //a file to chip8's RAM, starting at addr 0x200
         //The file might be too big to fit in the RAM,
-        //or we might be unable to open it
+        //or we might be unable to open it.
+        //In that case, this method will throw the appropriate exception.
         Chip8(std::string romFilename);
 
         //Execute the instruction pointed by the program counter
@@ -102,9 +106,12 @@ class Chip8{
         //Report an unknown opcode
         void reportCode(std::uint8_t high, std::uint8_t low);
 
+        //Helper method for constructor
+        void loadRom(std::ifstream& rom);
+
     //CONSTANTS
         //This is a group of sprites representing the hex digits
-        //They will be stored in RAM 0x000 to 0x1FF
+        //They will be stored starting from RAM 0x000 
         //Each sprite is 5 bytes long
         //This array is not pretty but I don't see
         //other ways to do this.

@@ -1,19 +1,34 @@
 #include "Chip8.hpp"
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <algorithm>
 
+//This method attempts copying the contents of
+//a file to chip8's RAM, starting at addr 0x200
+//The file might be too big to fit in the RAM,
+//or we might be unable to open it.
+//In that case, this method will throw the appropriate exception.
 Chip8::Chip8(std::string romFilename)
 //Seed the random engine
 : randEng{std::chrono::high_resolution_clock::now().time_since_epoch().count()}
 {
-    //Clear the screen
-    screen.fill(false);
+    std::ifstream rom{romFilename, std::ios::in | std::ios::binary};
+    
+    //If file could not be opened
+    if(!rom){
+        throw FileNotFound{};
+    }
+    else{
+        //Might throw rom too big exception
+        loadRom(rom);
 
-    //Place the font in memory
-    std::copy(hexSprites.begin(), hexSprites.end(), mem.begin());
+        //Clear the screen
+        screen.fill(false);
 
-    //TODO: Load Rom
+        //Place the font in memory
+        std::copy(hexSprites.begin(), hexSprites.end(), mem.begin());
+    }
 }
 
 
@@ -433,4 +448,22 @@ bool Chip8::drawSprite(int x, int y, std::uint16_t addr, std::size_t len){
         } 
     }
     return collision;
+}
+
+//Helper method for constructor
+void Chip8::loadRom(std::ifstream& rom){
+    std::uint16_t i = 0x200;
+    std::uint8_t buf;
+
+    for(buf = rom.get(); rom.good(); i++){
+        //If we're going over memory, throw
+        if(i >= mem.max_size){
+            throw FileTooBig{};
+        }
+        //Else write byte to memory and read new byte
+        else{
+            mem[i] = buf;
+            buf = rom.get();
+        }
+    }
 }
