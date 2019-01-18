@@ -181,14 +181,23 @@ void Chip8::step()
                     V[x] -= V[y];
                 break;
 
+                //CHIP-48 / SUPER CHIP-8
                 //8XY6 - SHR VX
                 //If least-significant bit of Vx is 1, then VF is set to 1.
                 //Otherwise, it is set to 0.
                 //Then Vx is divided by 2.
                 //Y seems to be ignored.
+                //case 0x06:
+                //    V[0xF] = V[x] & 1;
+                //    V[x] >>= 1;
+                //break;
+
+                //8XY6
+                //Store the value of register VY shifted right one bit in register VX
+                //Set register VF to the least significant bit prior to the shift
                 case 0x06:
-                    V[0xF] = V[x] & 1;
-                    V[x] >>= 1;
+                    V[0xF] = V[y] & 1;
+                    V[x] = V[y] >> 1;
                 break;
 
                 //8XY7 - SUBN Vx, Vy
@@ -199,14 +208,23 @@ void Chip8::step()
                     V[x] = V[y] - V[x];
                 break;
 
+                //CHIP-48 / SUPER CHIP-8
                 //8XYE - SHL VX
                 //If most-significant bit of Vx is 1, then VF is set to 1.
                 //Otherwise, it is set to 0.
                 //Then Vx is multiplied by 2.
                 //Y seems to be ignored.
+                //case 0x0E:
+                //    V[0xF] = (V[x] & 128) >> 7;
+                //    V[x] <<= 1;
+                //break;
+
+                //8XYE
+                //Store the value of register VY shifted left one bit in register VX
+                //Set register VF to the most significant bit prior to the shift
                 case 0x0E:
-                    V[0xF] = (V[x] & 128) >> 7;
-                    V[x] <<= 1;
+                    V[0xF] = (V[y] & 128) >> 7;
+                    V[x] = V[y] << 1;
                 break;
 
                 default:
