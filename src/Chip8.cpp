@@ -283,7 +283,16 @@ void Chip8::step()
                 //FX0A - LD Vx, K
                 //Wait for keypress, store keypress in Vx
                 case 0x0A:
-                    //TODO
+                    if(waitingForKey == false){
+                        waitingForKey = true;
+                        nextAddr = PC;
+                    }
+                    else if(k.has_value()){
+                        V[x] = k.value();
+                        waitingForKey = false;
+                        k.reset();
+                        nextAddr = PC + 2;
+                    }
                 break;
 
                 //FX15 - LD DT, Vx
@@ -362,6 +371,36 @@ void reportCode(std::uint8_t high, std::uint8_t low){
     std::cerr << "Unknown Opcode: " << std::hex << high << low << std::dec << std::endl;
 }
 
+
+//This method will be called by handleInput
+void Chip8::pressKey(std::uint8_t key){
+    if(key > 0xF){
+        std::cerr << "Key does not exist! " << key << std::endl;
+    }
+    else{
+        keys[key] = true;
+
+        if(waitingForKey){
+            k = key;
+        }
+    }
+}
+
+//This method will be called by handleInput
+void Chip8::releaseKey(std::uint8_t key){
+    if(key > 0xF){
+        std::cerr << "Key does not exist! " << key << std::endl;
+    }
+    else{
+        keys[key] = false;
+    }
+}
+
+
+//This method will be called by display
+const std::array<bool, 64*32>& Chip8::get_screen(){
+    return screen;
+}
 
 
 //Helper method for draw instruction

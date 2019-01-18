@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+#include <array>
 #include <memory>
 #include <random>
 #include <cstdint>
@@ -19,6 +21,9 @@ class Chip8{
         bool isRunning();
 
         //Input and output is up to subclasses to implement
+        //Requirements for handleInput
+        //Will check isWaitingForKey.
+        //If true, the next pressed key must also be passed
         virtual void handleInput() = 0;
         virtual void display() = 0;
 
@@ -26,11 +31,20 @@ class Chip8{
         virtual ~Chip8();
 
     protected:
-        //These will be used by child classes for input and output
+        //These protected members will be used by child classes for input and output
+
+        //Running might have to be modified by windows events
         bool running;
+
+        //This is so we don't waste time redrawing the same thing
         bool screenUpdated = false;
-        std::array<bool, 64*32> screen;
-        std::array<bool, 16> keys;
+
+        //These methods will be called by handleInput
+        void pressKey(std::uint8_t key);
+        void releaseKey(std::uint8_t key);
+
+        //This method will be called by display
+        const std::array<bool, 64*32>& get_screen();
 
     private:
     //VARIABLES
@@ -65,6 +79,16 @@ class Chip8{
         //Utilities for random number generation
         std::default_random_engine randEng;
         std::uniform_int_distribution<std::uint8_t> intDist{0, 255};
+
+        //Helper variables for "wait for keypress" opcode
+        //When waiting, k will be filled with the next keypress
+        //Then waiting status will be reset when the instruction is executed again
+        std::optional<std::uint8_t> k;
+        bool waitingForKey = false;
+
+        //Input and Output
+        std::array<bool, 64*32> screen;
+        std::array<bool, 16> keys;
 
 
     //METHODS
