@@ -310,7 +310,7 @@ void Chip8::step()
                 //FX07 - LD Vx, DT
                 //Set Vx = delay timer
                 case 0x07:
-                    V[x] = delayTimer;
+                    V[x] = delayTimer.ticks;
                 break;
 
                 //FX0A - LD Vx, K
@@ -334,13 +334,15 @@ void Chip8::step()
                 //FX15 - LD DT, Vx
                 //Set delay timer to Vx
                 case 0x15:
-                    delayTimer = V[x];
+                    delayTimer.ticks = V[x];
+                    delayTimer.lastModified = Clock::now();
                 break;
 
                 //FX18 - LD ST, Vx
                 //Set sound timer to Vx
                 case 0x18:
-                    soundtimer = V[x];
+                    soundTimer.ticks = V[x];
+                    soundTimer.lastModified = Clock::now();
                 break;
 
                 //FX1E - ADD I, Vx
@@ -484,4 +486,27 @@ void Chip8::loadRom(std::ifstream& rom){
             buf = rom.get();
         }
     }
+}
+
+
+//Decrement a timer if enough time has passed
+//Returns the amount of times it was decremented
+int Chip8::decrementTimer(timer& timer){
+    int times = 0; //Times we decrement the timer
+
+    //If timer is non-zero
+    if(timer.ticks > 0){
+        std::chrono::time_point now = Clock::now();
+        
+        //Dec timer for every decWait that has passed since last modification
+        while(timer.ticks && now - timer.lastModified >= decWait * (times + 1)){
+            timer.ticks--;
+            times++;
+        }
+
+        //If we have decremented, change lastModified
+        if(times) timer.lastModified = now;
+    }
+
+    return times;
 }

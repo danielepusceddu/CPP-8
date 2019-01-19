@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include <optional>
 #include <array>
 #include <memory>
@@ -25,9 +26,6 @@ class Chip8{
         bool isRunning();
 
         //Input and output is up to subclasses to implement
-        //Requirements for handleInput
-        //Will check isWaitingForKey.
-        //If true, the next pressed key must also be passed
         virtual void handleInput() = 0;
         virtual void display() = 0;
 
@@ -77,8 +75,17 @@ class Chip8{
 
         //Delay and Sound timers
         //When they are non-zero, they are decremented at a rate of 60hz
-        std::uint8_t delayTimer = 0;
-        std::uint8_t soundtimer = 0;
+        using Clock = std::chrono::high_resolution_clock;
+        using ms = std::chrono::milliseconds;
+        static constexpr ms decWait{17}; //Roughly 60hz
+        struct timer{
+            Clock::time_point lastModified;
+            std::uint8_t ticks = 0;
+        };
+        timer delayTimer;
+        timer soundTimer;
+        //std::uint8_t delayTimer = 0;
+        //std::uint8_t soundtimer = 0;
 
         //Utilities for random number generation
         std::default_random_engine randEng;
@@ -108,6 +115,10 @@ class Chip8{
 
         //Helper method for constructor
         void loadRom(std::ifstream& rom);
+
+        //Decrement a timer if enough time has passed
+        //Returns the amount of times it was decremented
+        int decrementTimer(timer& timer);
 
     //CONSTANTS
         //This is a group of sprites representing the hex digits
