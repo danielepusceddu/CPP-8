@@ -19,24 +19,20 @@ class Chip8{
         //In that case, this method will throw the appropriate exception.
         Chip8(std::string romFilename);
 
-        //Execute the instruction pointed by the program counter
-        void step();
+        void run();
 
-        //Returns false when Chip8 has finished execution
-        bool isRunning();
+        //Virtual destructor
+        virtual ~Chip8() = default;
+
+    protected:
+        //These protected members will be used by child classes for input and output
 
         //Input and output is up to subclasses to implement
         virtual void handleInput() = 0;
         virtual void display() = 0;
 
-        //Virtual destructor
-        virtual ~Chip8();
-
-    protected:
-        //These protected members will be used by child classes for input and output
-
         //Running might have to be modified by windows events
-        bool running;
+        bool running = true;
 
         //This is so we don't waste time redrawing the same thing
         bool screenUpdated = false;
@@ -50,6 +46,9 @@ class Chip8{
 
     private:
     //VARIABLES
+        int hz = 500;
+        std::chrono::milliseconds timeBetweenCycles{1000 / hz};
+
         //16 general purpose 8-bit registers
         //Referred to as Vx, where x is a hex digit.
         //VF is a Flag register used by some instructions
@@ -103,6 +102,9 @@ class Chip8{
 
 
     //METHODS
+        //Execute the instruction pointed by the program counter
+        void step();
+
         //Helper method for draw instruction
         //Returns true if collifion happened
         bool drawSprite(int x, int y, std::uint16_t addr, std::size_t len);

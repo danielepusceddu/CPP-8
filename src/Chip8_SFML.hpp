@@ -5,8 +5,6 @@
 class Chip8_SFML : public Chip8{
     public:
         Chip8_SFML(std::string romFilename);
-        void handleInput() override;
-        void display() override; 
 
     private:
     //DATA
@@ -16,4 +14,8 @@ class Chip8_SFML : public Chip8{
     //METHODS
         //Helper method used in handleInput
         void handleKeyEvent(sf::Event e);
+
+        //Overridden I/O methods
+        void handleInput() override;
+        void display() override; 
 };
