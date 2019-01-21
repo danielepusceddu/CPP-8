@@ -1,4 +1,5 @@
 #include "Chip8.hpp"
+#include <thread>
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -11,12 +12,13 @@
 //In that case, this method will throw the appropriate exception.
 Chip8::Chip8(std::string romFilename)
 //Seed the random engine
-: randEng{std::chrono::high_resolution_clock::now().time_since_epoch().count()}
+: randEng{static_cast<unsigned long>(std::chrono::high_resolution_clock::now().time_since_epoch().count())}
 {
     std::ifstream rom{romFilename, std::ios::in | std::ios::binary};
     
     //If file could not be opened
     if(!rom){
+        std::cerr << "File not found!" << std::endl;
         throw FileNotFound{};
     }
     else{
@@ -28,6 +30,23 @@ Chip8::Chip8(std::string romFilename)
 
         //Place the font in memory
         std::copy(hexSprites.begin(), hexSprites.end(), mem.begin());
+    }
+}
+
+
+void Chip8::run(){
+    std::chrono::time_point lastCycle = Clock::now();
+    running = true;
+
+    while(running){
+        std::chrono::time_point now = Clock::now();
+
+        for(int i = 1; lastCycle + (timeBetweenCycles * i) < now; i++){
+            handleInput();
+            step();
+            display();
+            lastCycle = now;
+        }
     }
 }
 
@@ -60,6 +79,7 @@ void Chip8::step()
                 //Clear the display.
                 case 0xE0:
                     screen.fill(false);
+                    screenUpdated = true;
                 break;
 
                 //00EE - RET
@@ -274,6 +294,7 @@ void Chip8::step()
         //Set VF = collision.
         case 0xD0:
             V[0xF] = drawSprite(V[x], V[y], I, low & 0x0F);
+            screenUpdated = true;
         break;
 
 
@@ -396,7 +417,7 @@ void Chip8::step()
 
 
 //Helper method for XNNN instructions
-std::uint16_t getNNN(std::uint8_t high, std::uint8_t low){
+std::uint16_t Chip8::getNNN(std::uint8_t high, std::uint8_t low){
     std::uint16_t nnn = high & 0x0F;
     nnn <<= 8;
     nnn += low;
@@ -405,7 +426,7 @@ std::uint16_t getNNN(std::uint8_t high, std::uint8_t low){
 
 
 //Report an unknown opcode
-void reportCode(std::uint8_t high, std::uint8_t low){
+void Chip8::reportCode(std::uint8_t high, std::uint8_t low){
     std::cerr << "Unknown Opcode: " << std::hex << high << low << std::dec << std::endl;
 }
 
@@ -477,7 +498,7 @@ void Chip8::loadRom(std::ifstream& rom){
 
     for(buf = rom.get(); rom.good(); i++){
         //If we're going over memory, throw
-        if(i >= mem.max_size){
+        if(i >= mem.max_size()){
             throw FileTooBig{};
         }
         //Else write byte to memory and read new byte
