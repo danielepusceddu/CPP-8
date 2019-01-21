@@ -11,6 +11,7 @@ class Chip8_SFML : public Chip8{
     private:
     //DATA
         sf::RenderWindow window;
+        sf::RectangleShape rect;
 
     //METHODS
         //Helper method used in handleInput
