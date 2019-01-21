@@ -39,7 +39,7 @@ void Chip8_SFML::display(){
         for(int y = 0; y < 32; y++){
             for(int x = 0; x < 64; x++){
                 //If pixel is turned on
-                if(screen[(y * 32) + x]){
+                if(screen[(y * 64) + x]){
                     //Draw it
                     rect.setPosition(x*10, y*10);
                     window.draw(rect);
