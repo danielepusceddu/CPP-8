@@ -19,7 +19,11 @@ class Chip8{
         //In that case, this method will throw the appropriate exception.
         Chip8(std::string romFilename);
 
+        //This method runs until user input stops the execution
         void run();
+
+        //Set chip48 mode
+        void setChip48(bool b);
 
         //Virtual destructor
         virtual ~Chip8() = default;
@@ -48,6 +52,10 @@ class Chip8{
     //VARIABLES
         int hz = 500;
         std::chrono::milliseconds timeBetweenCycles{1000 / hz};
+
+        //This flag is used to know if we should do
+        //chip-8 or chip-48 shift instructions
+        bool chip48 = false;
 
         //16 general purpose 8-bit registers
         //Referred to as Vx, where x is a hex digit.
