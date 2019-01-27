@@ -3,9 +3,15 @@
 Chip8_SFML::Chip8_SFML(std::string romFilename)
 : Chip8{romFilename}
 {
+    sf::VideoMode desktop{sf::VideoMode::getDesktopMode()};
+    sf::Vector2i center{static_cast<int>(desktop.width) / 2 - 640 / 2, static_cast<int>(desktop.height) / 2 - 320 / 2};
+
     //1 bit per pixel. Chip8 is monochrome.
     //(hopefully this works)
     window.create(sf::VideoMode{640, 320, 1}, "Chip8");
+
+    //Center the window
+    window.setPosition(center);
 
     //Initialize rectangle
     rect.setFillColor(sf::Color{sf::Color::White});
