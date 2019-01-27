@@ -49,6 +49,8 @@ void Chip8::run(){
 
         for(int i = 1; lastCycle + (timeBetweenCycles * i) < now; i++){
             handleInput();
+            decrementTimer(soundTimer);
+            decrementTimer(delayTimer);
             step();
             display();
             lastCycle = now;
@@ -91,7 +93,7 @@ void Chip8::step()
                 //00EE - RET
                 //Set PC to address at top of the stack, then dec SP
                 case 0xEE:
-                    nextAddr = stack[SP - 1];
+                    nextAddr = stack[SP - 1] + 2;
                     SP--;
                 break;
 
