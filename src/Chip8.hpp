@@ -81,10 +81,13 @@ class Chip8{
         //This register is usually used to store addresses
         std::uint16_t I = 0;
 
-        //Delay and Sound timers
-        //When they are non-zero, they are decremented at a rate of 60hz
+        //Shorthands for chrono utilities
         using Clock = std::chrono::high_resolution_clock;
         using ms = std::chrono::milliseconds;
+        using time = std::chrono::time_point<Clock, Clock::duration>;
+
+        //Delay and Sound timers
+        //When they are non-zero, they are decremented at a rate of 60hz
         static constexpr ms decWait{17}; //Roughly 60hz
         struct timer{
             Clock::time_point lastModified;

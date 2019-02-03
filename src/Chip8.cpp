@@ -41,24 +41,30 @@ void Chip8::setChip48(bool b){
 
 
 void Chip8::run(){
-    std::chrono::time_point lastCycle = Clock::now();
+    ms msBuf{timeBetweenCycles};
+    time lastCycle{Clock::now()};
     running = true;
 
     while(running){
-        std::chrono::time_point now = Clock::now();
+        time now{Clock::now()};
+        ms sinceLastCycle = std::chrono::duration_cast<ms>(now - lastCycle);
 
-        for(int i = 1; lastCycle + (timeBetweenCycles * i) < now; i++){
+        //Step for each timeBetweenCycles in msBuf
+        for(msBuf += sinceLastCycle; msBuf >= timeBetweenCycles; msBuf -= timeBetweenCycles){
             handleInput();
             decrementTimer(delayTimer);
 
             //Play sound if soundTimer was decremented to 0
-            if(decrementTimer(soundTimer) && soundTimer.ticks == 0)
+            if(decrementTimer(soundTimer) && soundTimer.ticks == 0){
                 playSound();
+            }
             
             step();
             display();
             lastCycle = now;
         }
+
+        std::this_thread::sleep_for(timeBetweenCycles);
     }
 }
 
