@@ -16,6 +16,10 @@ Chip8_SFML::Chip8_SFML(std::string romFilename)
     //Initialize rectangle
     rect.setFillColor(sf::Color{sf::Color::White});
     rect.setSize(sf::Vector2f{10, 10});
+
+    //Load sounds
+    beepBuffer.loadFromFile("../assets/beep.ogg");
+    beep.setBuffer(beepBuffer);
 }
 
 
@@ -30,6 +34,10 @@ void Chip8_SFML::handleInput(){
             running = false;
         }
     }
+}
+
+void Chip8_SFML::playSound(){
+    beep.play();
 }
 
 

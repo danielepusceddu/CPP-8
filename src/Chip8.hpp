@@ -32,6 +32,7 @@ class Chip8{
         //These protected members will be used by child classes for input and output
 
         //Input and output is up to subclasses to implement
+        virtual void playSound() = 0;
         virtual void handleInput() = 0;
         virtual void display() = 0;
 

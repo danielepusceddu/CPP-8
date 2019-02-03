@@ -49,8 +49,12 @@ void Chip8::run(){
 
         for(int i = 1; lastCycle + (timeBetweenCycles * i) < now; i++){
             handleInput();
-            decrementTimer(soundTimer);
             decrementTimer(delayTimer);
+
+            //Play sound if soundTimer was decremented to 0
+            if(decrementTimer(soundTimer) && soundTimer.ticks == 0)
+                playSound();
+            
             step();
             display();
             lastCycle = now;
