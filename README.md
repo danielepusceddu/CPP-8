@@ -32,5 +32,6 @@ A 0 B F     z x c v
 ### Credits
 Beep effect from http://www.freesfx.co.uk
 
-Chip-8 documentations http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
-                      http://mattmik.com/files/chip8/mastering/chip8.html
+Chip-8 documentations used:
+* http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+* http://mattmik.com/files/chip8/mastering/chip8.html
