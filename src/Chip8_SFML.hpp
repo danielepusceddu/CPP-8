@@ -21,5 +21,5 @@ class Chip8_SFML : public Chip8{
         //Overridden I/O methods
         void handleInput() override;
         void playSound() override;
-        void display() override; 
+        void draw(const std::array<bool, 64*32>& screen) override; 
 };

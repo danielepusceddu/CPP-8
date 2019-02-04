@@ -41,29 +41,24 @@ void Chip8_SFML::playSound(){
 }
 
 
-void Chip8_SFML::display(){
+void Chip8_SFML::draw(const std::array<bool, 64*32>& screen){
 
-    //If the screen has been updated since last draw
-    if(screenUpdated){
-        window.clear();
-        auto screen = get_screen();
+    window.clear();
 
-        //draw on our sfml window...
-        //For each coordinate
-        for(int y = 0; y < 32; y++){
-            for(int x = 0; x < 64; x++){
-                //If pixel is turned on
-                if(screen[(y * 64) + x]){
-                    //Draw it
-                    rect.setPosition(x*10, y*10);
-                    window.draw(rect);
-                }
+    //For each coordinate
+    for(int y = 0; y < 32; y++){
+        for(int x = 0; x < 64; x++){
+
+            //If pixel is turned on, draw it
+            if(screen[(y * 64) + x]){
+                rect.setPosition(x*10, y*10);
+                window.draw(rect);
             }
-        }
 
-        window.display();
-        screenUpdated = false;
+        }
     }
+
+    window.display();
 }
 
 

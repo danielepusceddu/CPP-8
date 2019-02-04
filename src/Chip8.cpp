@@ -60,7 +60,11 @@ void Chip8::run(){
             }
             
             step();
-            display();
+
+            if(screenUpdated){
+                draw(screen);
+                screenUpdated = false;
+            }
             lastCycle = now;
         }
 
@@ -476,12 +480,6 @@ void Chip8::releaseKey(std::uint8_t key){
     else{
         keys[key] = false;
     }
-}
-
-
-//This method will be called by display
-const std::array<bool, 64*32>& Chip8::get_screen(){
-    return screen;
 }
 
 

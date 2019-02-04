@@ -29,28 +29,23 @@ class Chip8{
         virtual ~Chip8() = default;
 
     protected:
-        //These protected members will be used by child classes for input and output
-
         //Input and output is up to subclasses to implement
         virtual void playSound() = 0;
         virtual void handleInput() = 0;
-        virtual void display() = 0;
+        virtual void draw(const std::array<bool, 64*32>& screen) = 0;
 
         //Running might have to be modified by windows events
         bool running = true;
-
-        //This is so we don't waste time redrawing the same thing
-        bool screenUpdated = false;
 
         //These methods will be called by handleInput
         void pressKey(std::uint8_t key);
         void releaseKey(std::uint8_t key);
 
-        //This method will be called by display
-        const std::array<bool, 64*32>& get_screen();
-
     private:
     //VARIABLES
+        //This is so we don't waste time redrawing the same thing
+        bool screenUpdated = false;
+
         int hz = 500;
         std::chrono::milliseconds timeBetweenCycles{1000 / hz};
 
@@ -139,7 +134,7 @@ class Chip8{
         //They will be stored starting from RAM 0x000 
         //Each sprite is 5 bytes long
         //This array is not pretty but I don't see
-        //other ways to do this.
+        //better ways to do this.
         static constexpr std::array<std::uint8_t, 16*5> hexSprites =
             {
                 //0
