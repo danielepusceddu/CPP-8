@@ -498,7 +498,7 @@ bool Chip8::drawSprite(int x, int y, std::uint16_t addr, std::size_t len){
             
             //Get a reference to the screen's pixel
             //If coordinate is outside of the screen, wrap around
-            bool& screenPixel = screen[(((y + spriteY) * 64) + (x + spriteX)) % screen.max_size()]; 
+            bool& screenPixel = screen[(((y + spriteY) * DISPLAY_WIDTH) + (x + spriteX)) % screen.max_size()]; 
 
             //Collision is true if both pixels are 1.
             //The pixel will be erased as result of the XOR

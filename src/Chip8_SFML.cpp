@@ -3,19 +3,19 @@
 Chip8_SFML::Chip8_SFML(std::string romFilename)
 : Chip8{romFilename}
 {
+    sf::Vector2i windowSize{Chip8::DISPLAY_WIDTH * windowSizeFactor, Chip8::DISPLAY_HEIGHT * windowSizeFactor};
     sf::VideoMode desktop{sf::VideoMode::getDesktopMode()};
-    sf::Vector2i center{static_cast<int>(desktop.width) / 2 - 640 / 2, static_cast<int>(desktop.height) / 2 - 320 / 2};
+    sf::Vector2i center{static_cast<int>(desktop.width) / 2 - windowSize.x / 2, static_cast<int>(desktop.height) / 2 - windowSize.y / 2};
 
     //1 bit per pixel. Chip8 is monochrome.
-    //(hopefully this works)
-    window.create(sf::VideoMode{640, 320, 1}, "Chip8");
+    window.create(sf::VideoMode{static_cast<unsigned>(windowSize.x), static_cast<unsigned>(windowSize.y), 1}, "Chip8");
 
     //Center the window
     window.setPosition(center);
 
     //Initialize rectangle
     rect.setFillColor(sf::Color{sf::Color::White});
-    rect.setSize(sf::Vector2f{10, 10});
+    rect.setSize(sf::Vector2f{windowSizeFactor, windowSizeFactor});
 
     //Load sounds
     beepBuffer.loadFromFile("../assets/beep.ogg");
@@ -41,17 +41,17 @@ void Chip8_SFML::playSound(){
 }
 
 
-void Chip8_SFML::draw(const std::array<bool, 64*32>& screen){
+void Chip8_SFML::draw(const std::array<bool, Chip8::DISPLAY_WIDTH * Chip8::DISPLAY_HEIGHT>& screen){
 
     window.clear();
 
     //For each coordinate
-    for(int y = 0; y < 32; y++){
-        for(int x = 0; x < 64; x++){
+    for(int y = 0; y < Chip8::DISPLAY_HEIGHT; y++){
+        for(int x = 0; x < Chip8::DISPLAY_WIDTH; x++){
 
             //If pixel is turned on, draw it
-            if(screen[(y * 64) + x]){
-                rect.setPosition(x*10, y*10);
+            if(screen[(y * Chip8::DISPLAY_WIDTH) + x]){
+                rect.setPosition(x * windowSizeFactor, y * windowSizeFactor);
                 window.draw(rect);
             }
 

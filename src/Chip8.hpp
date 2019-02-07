@@ -29,13 +29,19 @@ class Chip8{
         virtual ~Chip8() = default;
 
     protected:
+    //CONSTANTS
+        static constexpr int DISPLAY_WIDTH = 64;
+        static constexpr int DISPLAY_HEIGHT = 32;
+    
+    //VARIABLES
+        //Might have to be modified by windows events
+        bool running = true;
+
+    //METHODS
         //Input and output is up to subclasses to implement
         virtual void playSound() = 0;
         virtual void handleInput() = 0;
-        virtual void draw(const std::array<bool, 64*32>& screen) = 0;
-
-        //Running might have to be modified by windows events
-        bool running = true;
+        virtual void draw(const std::array<bool, DISPLAY_WIDTH * DISPLAY_HEIGHT>& screen) = 0;
 
         //These methods will be called by handleInput
         void pressKey(std::uint8_t key);
@@ -104,7 +110,7 @@ class Chip8{
         bool waitingForKey = false;
 
         //Input and Output
-        std::array<bool, 64*32> screen;
+        std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT> screen;
         std::array<bool, 16> keys;
 
 

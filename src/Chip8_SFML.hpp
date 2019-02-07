@@ -9,6 +9,7 @@ class Chip8_SFML : public Chip8{
 
     private:
     //DATA
+        int windowSizeFactor = 10;
         sf::RenderWindow window;
         sf::RectangleShape rect;
         sf::SoundBuffer beepBuffer;
@@ -21,5 +22,5 @@ class Chip8_SFML : public Chip8{
         //Overridden I/O methods
         void handleInput() override;
         void playSound() override;
-        void draw(const std::array<bool, 64*32>& screen) override; 
+        void draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& screen) override; 
 };
