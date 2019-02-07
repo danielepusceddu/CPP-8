@@ -46,12 +46,17 @@ class Chip8{
         //These methods will be called by handleInput
         void pressKey(std::uint8_t key);
         void releaseKey(std::uint8_t key);
+        void togglePause();
 
     private:
     //VARIABLES
         //This is so we don't waste time redrawing the same thing
         bool screenUpdated = false;
 
+        //Pause status
+        bool pause = false;
+
+        //Hertz and ms between each cycle
         int hz = 500;
         std::chrono::milliseconds timeBetweenCycles{1000 / hz};
 

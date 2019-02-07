@@ -76,9 +76,15 @@ void Chip8_SFML::handleKeyEvent(sf::Event e){
         //Key Pressed
         case sf::Event::KeyPressed:
             switch(e.key.code){
-                //ESC
+                //ESC - Quit
                 case sf::Keyboard::Escape:
                     running = false;
+                break;
+
+                //Pause
+                case sf::Keyboard::Pause:
+                case sf::Keyboard::F1:
+                    togglePause();
                 break;
 
                 case sf::Keyboard::Num1:

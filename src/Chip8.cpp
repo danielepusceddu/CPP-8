@@ -46,26 +46,34 @@ void Chip8::run(){
     running = true;
 
     while(running){
-        time now{Clock::now()};
-        ms sinceLastCycle = std::chrono::duration_cast<ms>(now - lastCycle);
 
-        //Step for each timeBetweenCycles in msBuf
-        for(msBuf += sinceLastCycle; msBuf >= timeBetweenCycles; msBuf -= timeBetweenCycles){
-            handleInput();
-            decrementTimer(delayTimer);
+        //If intepreter is not paused, do a full cycle
+        if(pause == false){
+            time now{Clock::now()};
+            ms sinceLastCycle = std::chrono::duration_cast<ms>(now - lastCycle);
 
-            //Play sound if soundTimer was decremented to 0
-            if(decrementTimer(soundTimer) && soundTimer.ticks == 0){
-                playSound();
-            }
+            //Step for each timeBetweenCycles in msBuf
+            for(msBuf += sinceLastCycle; msBuf >= timeBetweenCycles; msBuf -= timeBetweenCycles){
+                handleInput();
+                decrementTimer(delayTimer);
+
+                //Play sound if soundTimer was decremented to 0
+                if(decrementTimer(soundTimer) && soundTimer.ticks == 0){
+                    playSound();
+                }
             
-            step();
+                step();
 
-            if(screenUpdated){
-                draw(screen);
-                screenUpdated = false;
+                if(screenUpdated){
+                    draw(screen);
+                    screenUpdated = false;
+                }
+                lastCycle = now;
             }
-            lastCycle = now;
+        }
+        //If interpreter is paused, just check for input
+        else{
+            handleInput();
         }
 
         std::this_thread::sleep_for(timeBetweenCycles);
@@ -480,6 +488,10 @@ void Chip8::releaseKey(std::uint8_t key){
     else{
         keys[key] = false;
     }
+}
+
+void Chip8::togglePause(){
+    pause = !pause;
 }
 
 

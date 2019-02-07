@@ -31,6 +31,8 @@ A 0 B F     z x c v
 
 ESC to quit the interpreter.
 
+Pause or F1 to pause the interpreter.
+
 ### Credits
 Beep effect from http://www.freesfx.co.uk
 
