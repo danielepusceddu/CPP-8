@@ -28,6 +28,9 @@ Chip8::Chip8(std::string romFilename)
         //Clear the screen
         screen.fill(false);
 
+        //Set all keys to up
+        keys.fill(false);
+
         //Place the font in memory
         std::copy(hexSprites.begin(), hexSprites.end(), mem.begin());
     }
