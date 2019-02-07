@@ -494,6 +494,10 @@ void Chip8::togglePause(){
     pause = !pause;
 }
 
+void Chip8::stop(){
+    running = false;
+}
+
 
 //Helper method for draw instruction
 //Returns true if collifion happened

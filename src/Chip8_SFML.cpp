@@ -31,7 +31,7 @@ void Chip8_SFML::handleInput(){
             handleKeyEvent(buf);
         }
         else if(buf.type == sf::Event::Closed){
-            running = false;
+            stop();
         }
     }
 }
@@ -78,7 +78,7 @@ void Chip8_SFML::handleKeyEvent(sf::Event e){
             switch(e.key.code){
                 //ESC - Quit
                 case sf::Keyboard::Escape:
-                    running = false;
+                    stop();
                 break;
 
                 //Pause
@@ -155,11 +155,6 @@ void Chip8_SFML::handleKeyEvent(sf::Event e){
 
         case sf::Event::KeyReleased:
             switch(e.key.code){
-                //ESC
-                case sf::Keyboard::Escape:
-                    running = false;
-                break;
-
                 case sf::Keyboard::Num1:
                     releaseKey(1);
                 break;

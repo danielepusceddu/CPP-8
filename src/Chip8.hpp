@@ -33,10 +33,6 @@ class Chip8{
         static constexpr int DISPLAY_WIDTH = 64;
         static constexpr int DISPLAY_HEIGHT = 32;
     
-    //VARIABLES
-        //Might have to be modified by windows events
-        bool running = true;
-
     //METHODS
         //Input and output is up to subclasses to implement
         virtual void playSound() = 0;
@@ -46,7 +42,8 @@ class Chip8{
         //These methods will be called by handleInput
         void pressKey(std::uint8_t key);
         void releaseKey(std::uint8_t key);
-        void togglePause();
+        void togglePause(); //Pauses / unpauses execution
+        void stop();    //Stops execution
 
     private:
     //VARIABLES
@@ -55,6 +52,9 @@ class Chip8{
 
         //Pause status
         bool pause = false;
+
+        //Running status
+        bool running = true;
 
         //Hertz and ms between each cycle
         int hz = 500;
