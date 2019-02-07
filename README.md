@@ -29,6 +29,8 @@ Chip8 Key   Keyboard
 A 0 B F     z x c v
 ```
 
+ESC to quit the interpreter.
+
 ### Credits
 Beep effect from http://www.freesfx.co.uk
 
