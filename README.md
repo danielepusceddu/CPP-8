@@ -12,7 +12,7 @@ make
 ```
 
 ### Usage
-`cpp8 romPath [chip48] [-s <outputScale>`
+`cpp8 romPath [chip48] [-s <outputScale>]`
 
 `-s <outputScale>` multiplies the original resolution (64x32) by outputScale.
 outputScale should not be less than 1. The default is 10.
