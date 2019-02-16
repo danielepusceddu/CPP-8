@@ -1,9 +1,11 @@
 #include "Chip8_SFML.hpp"
 
-Chip8_SFML::Chip8_SFML(std::string romFilename)
-: Chip8{romFilename}
+Chip8_SFML::Chip8_SFML(std::string romFilename, int resolutionScale)
+: Chip8{romFilename, resolutionScale}
 {
-    sf::Vector2i windowSize{Chip8::DISPLAY_WIDTH * windowSizeFactor, Chip8::DISPLAY_HEIGHT * windowSizeFactor};
+    //Calculate window size and position.
+    int scale = getScale();
+    sf::Vector2i windowSize{Chip8::DISPLAY_WIDTH * scale, Chip8::DISPLAY_HEIGHT * scale};
     sf::VideoMode desktop{sf::VideoMode::getDesktopMode()};
     sf::Vector2i center{static_cast<int>(desktop.width) / 2 - windowSize.x / 2, static_cast<int>(desktop.height) / 2 - windowSize.y / 2};
 
@@ -15,7 +17,7 @@ Chip8_SFML::Chip8_SFML(std::string romFilename)
 
     //Initialize rectangle
     rect.setFillColor(sf::Color{sf::Color::White});
-    rect.setSize(sf::Vector2f{windowSizeFactor, windowSizeFactor});
+    rect.setSize(sf::Vector2f{scale, scale});
 
     //Load sounds
     beepBuffer.loadFromFile("../assets/beep.ogg");
@@ -42,7 +44,7 @@ void Chip8_SFML::playSound(){
 
 
 void Chip8_SFML::draw(const std::array<bool, Chip8::DISPLAY_WIDTH * Chip8::DISPLAY_HEIGHT>& screen){
-
+    int scale = getScale();
     window.clear();
 
     //For each coordinate
@@ -51,7 +53,7 @@ void Chip8_SFML::draw(const std::array<bool, Chip8::DISPLAY_WIDTH * Chip8::DISPL
 
             //If pixel is turned on, draw it
             if(screen[(y * Chip8::DISPLAY_WIDTH) + x]){
-                rect.setPosition(x * windowSizeFactor, y * windowSizeFactor);
+                rect.setPosition(x * scale, y * scale);
                 window.draw(rect);
             }
 

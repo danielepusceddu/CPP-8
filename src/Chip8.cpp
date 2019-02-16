@@ -10,7 +10,7 @@
 //The file might be too big to fit in the RAM,
 //or we might be unable to open it.
 //In that case, this method will throw the appropriate exception.
-Chip8::Chip8(std::string romFilename)
+Chip8::Chip8(std::string romFilename, int outputScale)
 //Seed the random engine
 : randEng{static_cast<unsigned long>(std::chrono::high_resolution_clock::now().time_since_epoch().count())}
 {
@@ -33,6 +33,14 @@ Chip8::Chip8(std::string romFilename)
 
         //Place the font in memory
         std::copy(hexSprites.begin(), hexSprites.end(), mem.begin());
+
+        //set scale if valid
+        if(outputScale > 0){
+            scale = outputScale;
+        }
+        else{
+            std::cerr << "Bad scale parameter\n";
+        }
     }
 }
 
@@ -40,6 +48,12 @@ Chip8::Chip8(std::string romFilename)
 void Chip8::setChip48(bool b){
     chip48 = b;
 }
+
+
+int Chip8::getScale(){
+    return scale;
+}
+
 
 
 

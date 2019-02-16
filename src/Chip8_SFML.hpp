@@ -5,11 +5,10 @@
 
 class Chip8_SFML : public Chip8{
     public:
-        Chip8_SFML(std::string romFilename);
+        Chip8_SFML(std::string romFilename, int scale);
 
     private:
     //DATA
-        int windowSizeFactor = 10;
         sf::RenderWindow window;
         sf::RectangleShape rect;
         sf::SoundBuffer beepBuffer;

@@ -12,12 +12,15 @@ make
 ```
 
 ### Usage
-`cpp8 romPath [chip48]`
+`cpp8 romPath [chip48] [-s <outputScale>`
+
+`-s <outputScale>` multiplies the original resolution (64x32) by outputScale.
+outputScale should not be less than 1. The default is 10.
 
 chip48 option enables compatibility with Chip-48's shift instructions.
 
 Games I have found to require chip48:
-* Space Invaders
+* **Space Invaders.** Hit detection seems to break without it.
 
 ### Keybindings
 ```    

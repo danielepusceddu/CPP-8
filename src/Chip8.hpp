@@ -17,13 +17,18 @@ class Chip8{
         //The file might be too big to fit in the RAM,
         //or we might be unable to open it.
         //In that case, this method will throw the appropriate exception.
-        Chip8(std::string romFilename);
+        //outputScale sets the output resolution to DISPLAY_WIDTH*scale by DISPLAY_HEIGHT*scale
+        //It cannot be less than 1 and the default is 10.
+        Chip8(std::string romFilename, int outputScale);
 
         //This method runs until user input stops the execution
         void run();
 
         //Set chip48 mode
         void setChip48(bool b);
+
+        //Get resolution scaling
+        int getScale();
 
         //Virtual destructor
         virtual ~Chip8() = default;
@@ -55,6 +60,9 @@ class Chip8{
 
         //Running status
         bool running = true;
+
+        //Output resolution will be DISPLAY_WIDTH*scale by DISPLAY_HEIGHT*scale
+        int scale = 10;
 
         //Hertz and ms between each cycle
         int hz = 500;
