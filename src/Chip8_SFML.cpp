@@ -17,7 +17,7 @@ Chip8_SFML::Chip8_SFML(std::string romFilename, int resolutionScale)
 
     //Initialize rectangle
     rect.setFillColor(sf::Color{sf::Color::White});
-    rect.setSize(sf::Vector2f{scale, scale});
+    rect.setSize(sf::Vector2f{static_cast<float>(scale), static_cast<float>(scale)});
 
     //Load sounds
     beepBuffer.loadFromFile("../assets/beep.ogg");
@@ -152,6 +152,9 @@ void Chip8_SFML::handleKeyEvent(sf::Event e){
                 case sf::Keyboard::V:
                     pressKey(0xF);
                 break;
+
+                default:
+                break;
             }
         break;
 
@@ -220,7 +223,13 @@ void Chip8_SFML::handleKeyEvent(sf::Event e){
                 case sf::Keyboard::V:
                     releaseKey(0xF);
                 break;
+
+                default:
+                break;
             }
         break; 
+
+        default:
+        break;
     }
 }
