@@ -28,8 +28,19 @@ Chip8_SDL::~Chip8_SDL(){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-void Chip8_SDL::handleInput(){
 
+
+void Chip8_SDL::handleInput(){
+    SDL_Event buf;
+
+    while(SDL_PollEvent(&buf)){
+        if(buf.type == SDL_KEYDOWN || buf.type == SDL_KEYUP){
+            handleKeyEvent(buf);
+        }
+        else if(buf.type == SDL_QUIT){
+            stop();
+        }
+    }
 }
 
 void Chip8_SDL::draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& screen){
@@ -65,4 +76,176 @@ void Chip8_SDL::draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& scree
 
 void Chip8_SDL::playSound(){
 
+}
+
+
+
+void Chip8_SDL::handleKeyEvent(SDL_Event e){
+    /*
+    Chip8 Key   Keyboard
+    ---------   ---------
+     1 2 3 C     1 2 3 4
+     4 5 6 D     q w e r
+     7 8 9 E     a s d f
+     A 0 B F     z x c v
+     */
+
+    switch(e.type){
+        //Key Pressed
+        case SDL_KEYDOWN:
+            switch(e.key.keysym.sym){
+                //ESC - Quit
+                case SDLK_ESCAPE:
+                    stop();
+                break;
+
+                //Pause
+                case SDLK_PAUSE:
+                case SDLK_F1:
+                    togglePause();
+                break;
+
+                case SDLK_1:
+                    pressKey(1);
+                break;
+
+                case SDLK_2:
+                    pressKey(2);
+                break;
+
+                case SDLK_3:
+                    pressKey(3);
+                break;
+
+                case SDLK_4:
+                    pressKey(0xC);
+                break;
+
+                case SDLK_q:
+                    pressKey(4);
+                break;
+
+                case SDLK_w:
+                    pressKey(5);
+                break;
+
+                case SDLK_e:
+                    pressKey(6);
+                break;
+
+                case SDLK_r:
+                    pressKey(0xD);
+                break;
+
+                case SDLK_a:
+                    pressKey(7);
+                break;
+
+                case SDLK_s:
+                    pressKey(8);
+                break;
+
+                case SDLK_d:
+                    pressKey(9);
+                break;
+
+                case SDLK_f:
+                    pressKey(0xE);
+                break;
+
+                case SDLK_z:
+                    pressKey(0xA);
+                break;
+
+                case SDLK_x:
+                    pressKey(0);
+                break;
+
+                case SDLK_c:
+                    pressKey(0xB);
+                break;
+
+                case SDLK_v:
+                    pressKey(0xF);
+                break;
+
+                default:
+                break;
+            }
+        break;
+
+        case SDL_KEYUP:
+            switch(e.key.keysym.sym){
+                case SDLK_1:
+                    releaseKey(1);
+                break;
+
+                case SDLK_2:
+                    releaseKey(2);
+                break;
+
+                case SDLK_3:
+                    releaseKey(3);
+                break;
+
+                case SDLK_4:
+                    releaseKey(0xC);
+                break;
+
+                case SDLK_q:
+                    releaseKey(4);
+                break;
+
+                case SDLK_w:
+                    releaseKey(5);
+                break;
+
+                case SDLK_e:
+                    releaseKey(6);
+                break;
+
+                case SDLK_r:
+                    releaseKey(0xD);
+                break;
+
+                case SDLK_a:
+                    releaseKey(7);
+                break;
+
+                case SDLK_s:
+                    releaseKey(8);
+                break;
+
+                case SDLK_d:
+                    releaseKey(9);
+                break;
+
+                case SDLK_f:
+                    releaseKey(0xE);
+                break;
+
+                case SDLK_z:
+                    releaseKey(0xA);
+                break;
+
+                case SDLK_x:
+                    releaseKey(0);
+                break;
+
+                case SDLK_c:
+                    releaseKey(0xB);
+                break;
+
+                case SDLK_v:
+                    releaseKey(0xF);
+                break;
+
+                default:
+                break;
+            }
+        break; 
+
+        default:
+        break;
+    }
 }

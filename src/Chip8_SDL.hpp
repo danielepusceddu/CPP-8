@@ -15,7 +15,7 @@ class Chip8_SDL : public Chip8{
 
     //METHODS
         //Helper method used in handleInput
-        //void handleKeyEvent(sf::Event e);
+        void handleKeyEvent(SDL_Event e);
 
         //Overridden I/O methods
         void handleInput() override;
