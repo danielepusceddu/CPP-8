@@ -1,13 +1,18 @@
 ## CPP-8
-Chip-8 interpreter created with C++17 and SFML 2.5
+Chip-8 interpreter created with C++17.
 
 ### Compiling
+CPP-8 can be compiled to use SFML 2.5 or SDL2 as multimedia libraries.
+
+SDL2 is the default. Give a "-DCPP8_ENGINE=SFML" to cmake to compile for SFML.
+
 Compile in an appropriate build folder made in the root of the project so that the sound effect can be picked up.
 
 ```
 mkdir build
 cd build
-cmake ..
+cmake .. #Uses SDL2
+#cmake .. -DCPP8_ENGINE=SFML  #Uncomment this line to use SFML instead.
 make
 ```
 
@@ -15,6 +20,7 @@ make
 `cpp8 romPath [chip48] [-s <outputScale>]`
 
 `-s <outputScale>` multiplies the original resolution (64x32) by outputScale.
+
 outputScale should not be less than 1. The default is 10.
 
 chip48 option enables compatibility with Chip-48's shift instructions.
