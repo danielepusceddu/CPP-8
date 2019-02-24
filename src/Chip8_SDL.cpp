@@ -5,9 +5,10 @@ Chip8_SDL::Chip8_SDL(std::string romFilename, int scale)
 : Chip8{romFilename, scale}
 {
     //If SDL_Init error
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0){
         std::cerr << "SDL_Init Error: " << SDL_GetError() << "\n";
     }
+
     //Else init window and check if it is null
     else if(window = SDL_CreateWindow("Chip8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH*scale, DISPLAY_HEIGHT*scale, SDL_WINDOW_SHOWN);
             window == NULL){
@@ -19,6 +20,19 @@ Chip8_SDL::Chip8_SDL(std::string romFilename, int scale)
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
         SDL_RenderClear(renderer);
         rect.h = scale; rect.w = scale;
+
+        //Sound init
+        if(SDL_LoadWAV("../assets/beep.wav", &beepSpec, &beepBuf, &beepLength) == NULL){
+            std::cerr << "Error loading sound effect: " << SDL_GetError() << "\n"; 
+        }
+        else if(audioDevice = SDL_OpenAudioDevice(NULL, 0, &beepSpec, NULL, 0); audioDevice == 0){
+            std::cerr << "Failed opening audio device: " << SDL_GetError() << "\n"; 
+        }
+        else{
+            SDL_PauseAudioDevice(audioDevice, 0); //Unpause audio
+            audioSuccess = true;
+        }
+
     }
 
 }
@@ -26,6 +40,9 @@ Chip8_SDL::Chip8_SDL(std::string romFilename, int scale)
 Chip8_SDL::~Chip8_SDL(){
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
+    SDL_CloseAudioDevice(audioDevice);
+    SDL_FreeWAV(beepBuf);
     SDL_Quit();
 }
 
@@ -45,7 +62,6 @@ void Chip8_SDL::handleInput(){
 
 void Chip8_SDL::draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& screen){
     int scale = getScale();
-    //window.clear();
 
     //Use black to clear the screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -60,10 +76,9 @@ void Chip8_SDL::draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& scree
 
             //If pixel is turned on, draw it
             if(screen[(y * Chip8::DISPLAY_WIDTH) + x]){
-                //rect.setPosition(x * scale, y * scale);
-                rect.x = x * scale; rect.y = y * scale;
+                rect.x = x * scale; 
+                rect.y = y * scale;
                 SDL_RenderFillRect(renderer, &rect);
-                //window.draw(rect);
             }
 
         }
@@ -75,7 +90,9 @@ void Chip8_SDL::draw(const std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT>& scree
 }
 
 void Chip8_SDL::playSound(){
-
+    if(audioSuccess && SDL_QueueAudio(audioDevice, beepBuf, beepLength) < 0){
+        std::cerr << "Failed to play sound effect: " << SDL_GetError() << "\n";
+    }
 }
 
 
