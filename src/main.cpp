@@ -1,4 +1,11 @@
+#ifdef SFML
 #include "Chip8_SFML.hpp"
+typedef Chip8_SFML Chip8_Implementation;
+#else
+#include "Chip8_SDL.hpp"
+typedef Chip8_SDL Chip8_Implementation;
+#endif
+
 #include <iostream>
 #include <string>
 
@@ -16,7 +23,7 @@ int main(int argc, char** argv){
 
         //Read options from command line and initialize chip8
         parseOptions(argc, argv, chip48, scale);
-        Chip8_SFML chip8{argv[1], scale};
+        Chip8_Implementation chip8{argv[1], scale};
         chip8.setChip48(chip48);
 
         //Run the interpreter
