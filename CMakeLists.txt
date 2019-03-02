@@ -3,7 +3,7 @@ project(CPP-8)
 set(CMAKE_CXX_STANDARD 17)
 
 #SFML
-if(DEFINED CPP8_ENGINE AND ${CPP8_ENGINE} STREQUAL "SFML")
+if(DEFINED CPP8_ENGINE AND CPP8_ENGINE STREQUAL "SFML")
     message("Using SFML")
     find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
     add_library(cpp8lib src/Chip8.cpp
