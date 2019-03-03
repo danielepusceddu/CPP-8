@@ -1,9 +1,9 @@
 #ifdef SFML
 #include "Chip8_SFML.hpp"
-typedef Chip8_SFML Chip8_Implementation;
+using Chip8_Implementation = Chip8_SFML;
 #else
 #include "Chip8_SDL.hpp"
-typedef Chip8_SDL Chip8_Implementation;
+using Chip8_Implementation = Chip8_SDL;
 #endif
 
 #include <iostream>
