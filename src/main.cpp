@@ -9,7 +9,8 @@ using Chip8_Implementation = Chip8_SDL;
 #include <iostream>
 #include <string>
 
-void parseOptions(int argc, char** argv, bool& chip48, int& resolutionScale);
+//Very const-correct do not touch
+void parseOptions(int argc, char const * const * const argv, bool& chip48, int& resolutionScale);
 
 int main(int argc, char** argv){
     //If no rom path provided
@@ -33,10 +34,10 @@ int main(int argc, char** argv){
     return 0;
 }
 
-void parseOptions(int argc, char** argv, bool& chip48, int& resolutionScale){
+void parseOptions(int argc, char const * const * const argv, bool& chip48, int& resolutionScale){
     //argv[1] is the rom filename
     for(int i = 2; i < argc; i++){
-        std::string param{argv[i]};
+        const std::string param{argv[i]};
 
         if(param == "chip48"){
             chip48 = true;
