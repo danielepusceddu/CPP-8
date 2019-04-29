@@ -2,6 +2,7 @@
 #include <chrono>
 #include <optional>
 #include <array>
+#include <stack>
 #include <memory>
 #include <random>
 #include <cstdint>
@@ -78,11 +79,7 @@ class Chip8{
         std::uint8_t V[16];
 
         //Stack
-        std::uint16_t stack[16];
-
-        //Stack Pointer
-        //Points to topmost level of the stack
-        std::uint8_t SP = 0;
+        std::stack<std::uint16_t> stack;
 
         //4KB of RAM.
         //Chip-8 programs should start at 0x200 (512)

@@ -130,10 +130,10 @@ void Chip8::step()
                 break;
 
                 //00EE - RET
-                //Set PC to address at top of the stack, then dec SP
+                //Set PC to the instruction after the one pointed by the top of the stack, then dec SP
                 case 0xEE:
-                    nextAddr = stack[SP - 1] + 2;
-                    SP--;
+                    nextAddr = stack.top() + 2;
+                    stack.pop();
                 break;
 
                 default:
@@ -151,8 +151,7 @@ void Chip8::step()
         //2NNN - CALL ADDR
         //Inc SP, then put current PC on top of stack. Then PC = NNN
         case 0x20:
-            SP++;
-            stack[SP - 1] = PC;
+            stack.push(PC);
             nextAddr = nnn;
         break;
 
