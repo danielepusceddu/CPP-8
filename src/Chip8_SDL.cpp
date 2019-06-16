@@ -1,4 +1,5 @@
 #include "Chip8_SDL.hpp"
+#include "../assets/beep.h"
 #include <iostream>
 
 Chip8_SDL::Chip8_SDL(std::string romFilename, int scale)
@@ -22,7 +23,10 @@ Chip8_SDL::Chip8_SDL(std::string romFilename, int scale)
         rect.h = scale; rect.w = scale;
 
         //Sound init
-        if(SDL_LoadWAV("../assets/beep.wav", &beepSpec, &beepBuf, &beepLength) == NULL){
+        if(SDL_RWops* rw = SDL_RWFromConstMem(beepData.data(), beepData.size()); rw == NULL){
+            std::cerr << "Error obtaining sound effect from memory: " << SDL_GetError() << "\n";
+        } 
+        else if(SDL_LoadWAV_RW(rw, true, &beepSpec, &beepBuf, &beepLength) == NULL){
             std::cerr << "Error loading sound effect: " << SDL_GetError() << "\n"; 
         }
         else if(audioDevice = SDL_OpenAudioDevice(NULL, 0, &beepSpec, NULL, 0); audioDevice == 0){

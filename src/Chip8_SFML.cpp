@@ -1,4 +1,5 @@
 #include "Chip8_SFML.hpp"
+#include "../assets/beep.h"
 
 Chip8_SFML::Chip8_SFML(std::string romFilename, int resolutionScale)
 : Chip8{romFilename, resolutionScale}
@@ -20,7 +21,7 @@ Chip8_SFML::Chip8_SFML(std::string romFilename, int resolutionScale)
     rect.setSize(sf::Vector2f{static_cast<float>(scale), static_cast<float>(scale)});
 
     //Load sounds
-    beepBuffer.loadFromFile("../assets/beep.ogg");
+    beepBuffer.loadFromMemory(beepData.data(), beepData.size());
     beep.setBuffer(beepBuffer);
 }
 

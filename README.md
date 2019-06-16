@@ -6,7 +6,9 @@ CPP-8 can be compiled to use SFML 2.5 or SDL2 as multimedia libraries.
 
 SDL2 is the default. Give a "-DCPP8_ENGINE=SFML" to cmake to compile for SFML.
 
-Compile in an appropriate build folder made in the root of the project so that the sound effect can be picked up.
+Compile in an appropriate build folder made in the root of the project.
+
+The executable can then be moved anywhere you want and it will still work. The sound effect is now embedded into the executable.
 
 ```
 mkdir build
