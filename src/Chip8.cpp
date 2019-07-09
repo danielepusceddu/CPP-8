@@ -22,7 +22,7 @@ Chip8::Chip8(std::string romFilename, int outputScale)
     
     //If file could not be opened
     if(!rom){
-        std::cerr << "File not found!" << std::endl;
+        std::cerr << "File \"" << romFilename << "\"not found!" << std::endl;
         throw FileNotFound{};
     }
     else{
