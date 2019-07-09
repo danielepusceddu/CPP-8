@@ -5,6 +5,10 @@
 #include <chrono>
 #include <algorithm>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 //This method attempts copying the contents of
 //a file to chip8's RAM, starting at addr 0x200
 //The file might be too big to fit in the RAM,
@@ -54,48 +58,60 @@ int Chip8::getScale(){
     return scale;
 }
 
-
-
-
 void Chip8::run(){
-    ms msBuf{timeBetweenCycles};
-    time lastCycle{Clock::now()};
+    msBuf=timeBetweenCycles;
+    lastCycle=Clock::now();
     running = true;
 
+    #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop_arg(mainLoopFunc_emscripten, this, hz, 1);
+    #else
+
     while(running){
-
-        //If intepreter is not paused, do a full cycle
-        if(pause == false){
-            time now{Clock::now()};
-            ms sinceLastCycle = std::chrono::duration_cast<ms>(now - lastCycle);
-
-            //Step for each timeBetweenCycles in msBuf
-            for(msBuf += sinceLastCycle; msBuf >= timeBetweenCycles; msBuf -= timeBetweenCycles){
-                handleInput();
-                decrementTimer(delayTimer);
-
-                //Play sound if soundTimer was decremented to 0
-                if(decrementTimer(soundTimer) && soundTimer.ticks == 0){
-                    playSound();
-                }
-            
-                step();
-
-                if(screenUpdated){
-                    draw(screen);
-                    screenUpdated = false;
-                }
-                lastCycle = now;
-            }
-        }
-        //If interpreter is paused, just check for input
-        else{
-            handleInput();
-        }
-
+        mainLoopFunc();
         std::this_thread::sleep_for(timeBetweenCycles);
     }
+
+    #endif
 }
+
+void Chip8::mainLoopFunc(){
+    //If intepreter is not paused, do a full cycle
+    if(pause == false){
+        time now{Clock::now()};
+        ms sinceLastCycle = std::chrono::duration_cast<ms>(now - lastCycle);
+
+        //Step for each timeBetweenCycles in msBuf
+        for(msBuf += sinceLastCycle; msBuf >= timeBetweenCycles; msBuf -= timeBetweenCycles){
+            handleInput();
+            decrementTimer(delayTimer);
+
+            //Play sound if soundTimer was decremented to 0
+            if(decrementTimer(soundTimer) && soundTimer.ticks == 0){
+                playSound();
+            }
+        
+            step();
+
+            if(screenUpdated){
+                draw(screen);
+                screenUpdated = false;
+            }
+            lastCycle = now;
+        }
+    }
+    //If interpreter is paused, just check for input
+    else{
+        handleInput();
+    } 
+}
+
+
+void Chip8::mainLoopFunc_emscripten(void* chip8ptr){
+    static_cast<Chip8*>(chip8ptr)->mainLoopFunc();
+}
+
+
 
 
 void Chip8::step()

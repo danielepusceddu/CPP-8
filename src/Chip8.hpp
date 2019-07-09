@@ -123,8 +123,16 @@ class Chip8{
         std::array<bool, DISPLAY_WIDTH*DISPLAY_HEIGHT> screen;
         std::array<bool, 16> keys;
 
+    
+    //STRUCTS
+    ms msBuf;
+    time lastCycle;
 
     //METHODS
+        //Function called in main loop
+        void mainLoopFunc();
+        static void mainLoopFunc_emscripten(void* params);
+
         //Execute the instruction pointed by the program counter
         void step();
 
