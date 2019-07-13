@@ -1,10 +1,12 @@
 ## CPP-8
 Chip-8 interpreter created with C++17.
 
-### Compiling
+It can use SDL2, SFML2 or WebAssembly to run on the web.
+
+### Compiling for desktop
 CPP-8 can be compiled to use SFML 2.5 or SDL2 as multimedia libraries.
 
-SDL2 is the default. Give a "-DCPP8_ENGINE=SFML" to cmake to compile for SFML.
+SDL2 is the default. Give "-DCPP8_ENGINE=SFML" to cmake to compile for SFML.
 
 Compile in an appropriate build folder made in the root of the project.
 
@@ -18,7 +20,20 @@ cmake .. #Uses SDL2
 make
 ```
 
-### Usage
+### Compiling for web with WebAssembly
+CPP-8 can also be compiled with emscripten.
+
+Inside of your build folder, create a "c8games" folder with all of the Chip-8 games you want to play. Then:
+
+```
+emcc ../src/Chip8.cpp ../src/Chip8_SDL.cpp ../src/main.cpp -std=c++17 -O3 --preload-file c8games/ -s USE_SDL=2
+cp ../src/page.html a.html
+```
+
+After this, edit the `games` and `c48games` variables in `a.html` to include your games. Run the files on a server.
+To try it locally, use `python2 -m SimpleHTTPServer 8080` in your build directory and then go to localhost:8080/a.html
+
+### Command Line Arguments
 `cpp8 romPath [chip48] [-s <outputScale>]`
 
 `-s <outputScale>` multiplies the original resolution (64x32) by outputScale.
@@ -29,6 +44,7 @@ chip48 option enables compatibility with Chip-48's shift instructions.
 
 Games I have found to require chip48:
 * **Space Invaders.** Hit detection seems to break without it.
+* **Tic Tac Toe.** Or the game won't recognize when a player wins.
 
 ### Keybindings
 ```    
