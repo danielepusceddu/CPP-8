@@ -107,9 +107,19 @@ void Chip8::mainLoopFunc(){
 }
 
 
+#ifdef __EMSCRIPTEN__
 void Chip8::mainLoopFunc_emscripten(void* chip8ptr){
-    static_cast<Chip8*>(chip8ptr)->mainLoopFunc();
+    Chip8* chip8 = static_cast<Chip8*>(chip8ptr);
+
+    if(chip8->running){
+        chip8->mainLoopFunc();
+    }
+    else{
+        std::cout << "Cancelling main loop\n";
+        emscripten_cancel_main_loop();
+    }
 }
+#endif
 
 
 

@@ -131,7 +131,10 @@ class Chip8{
     //METHODS
         //Function called in main loop
         void mainLoopFunc();
+
+        #ifdef __EMSCRIPTEN__ //static wrapper for emscripten
         static void mainLoopFunc_emscripten(void* params);
+        #endif
 
         //Execute the instruction pointed by the program counter
         void step();
