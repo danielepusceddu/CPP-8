@@ -2,7 +2,7 @@
 Chip-8 interpreter created with C++17.
 
 It can use SDL2, SFML2 or WebAssembly to run on the web.
-You can it running here: danielepusceddu.github.io
+You can see it running here: [danielepusceddu.github.io](https://danielepusceddu.github.io)
 
 ### Compiling for desktop
 CPP-8 can be compiled to use SFML 2.5 or SDL2 as multimedia libraries.
@@ -30,7 +30,7 @@ Inside of your build directory, create a "c8games" directory with all of the Chi
 emcc ../src/Chip8.cpp ../src/Chip8_SDL.cpp ../src/main.cpp -std=c++17 -O3 --preload-file c8games/ -s USE_SDL=2
 ```
 After this, edit the html output to your liking. 
-You can find my html for the wasm here: https://github.com/danielepusceddu/danielepusceddu.github.io
+You can find my html for the wasm here: [github.com/danielepusceddu/danielepusceddu.github.io](https://github.com/danielepusceddu/danielepusceddu.github.io)
 
 
 ### Command Line Arguments
